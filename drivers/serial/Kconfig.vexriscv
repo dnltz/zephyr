@@ -1,0 +1,13 @@
+# Kconfig.vexriscv - VexRiscv UART configuration option
+#
+# Copyright (c) 2019 Phytec Messtechnik GmbH
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+menuconfig UART_VEXRISCV
+	bool "VexRiscv UART driver"
+	depends on SOC_SERIES_RISCV32_VEXRISCV
+	select SERIAL_HAS_DRIVER
+	help
+	  Enable the VexRiscv UART driver.
