@@ -35,5 +35,19 @@
 			current-speed = <115200>;
 			status = "disabled";
 		};
+
+		gpio0: gpio0@f0000000 {
+			compatible = "vexriscv,gpio";
+			reg = <0xF0000000 0x1000>;
+			#gpio-cells = <2>;
+			status = "disabled";
+		};
+
+		gpio1: gpio1@f0001000 {
+			compatible = "vexriscv,gpio";
+			reg = <0xF0001000 0x1000>;
+			#gpio-cells = <2>;
+			status = "disabled";
+		};
 	};
 };

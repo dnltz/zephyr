@@ -72,4 +72,6 @@ source "drivers/gpio/Kconfig.intel"
 
 source "drivers/gpio/Kconfig.stellaris"
 
+source "drivers/gpio/Kconfig.vexriscv"
+
 endif # GPIO

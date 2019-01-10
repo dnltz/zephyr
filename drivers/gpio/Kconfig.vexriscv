@@ -1,0 +1,23 @@
+# Kconfig.vexriscv - VexRiscv GPIO configuration option
+#
+# Copyright (c) 2019 Phytec Messtechnik GmbH
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+menuconfig GPIO_VEXRISCV
+	bool "VexRiscv GPIO driver"
+	depends on GPIO && SOC_SERIES_RISCV32_VEXRISCV
+	select HAS_DTS_GPIO
+	help
+	  Enable driver for the VexRiscv GPIO controller.
+
+	  Says n if not sure.
+
+if GPIO_VEXRISCV
+
+config GPIO_VEXRISCV_DEV_NAME
+	string "GPIO driver name"
+	default "gpio0"
+
+endif # GPIO_VEXRISCV
