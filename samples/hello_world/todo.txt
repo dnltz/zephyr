@@ -1,0 +1,2 @@
+export CROSS_COMPILE="/opt/riscv/bin/riscv32-unknown-elf-"
+export ZEPHYR_TOOLCHAIN_VARIANT="cross-compile"

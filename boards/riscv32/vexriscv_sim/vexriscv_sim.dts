@@ -54,4 +54,5 @@
 
 &uart0 {
 	status = "ok";
+	current-speed = <9600>;
 };
