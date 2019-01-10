@@ -1,0 +1,18 @@
+if BOARD_VEXRISCV_SIM
+
+config BOARD
+	default "vexriscv_sim"
+
+config SYS_CLOCK_HW_CYCLES_PER_SEC
+	int
+	default 25000000
+
+config RISCV_RAM_BASE_ADDR
+	hex
+	default	0x80000000
+
+config RISCV_RAM_SIZE
+	hex
+	default 0x10000
+
+endif
