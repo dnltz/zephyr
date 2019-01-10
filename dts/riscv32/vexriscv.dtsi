@@ -1,0 +1,30 @@
+/*
+ * Copyright (c) 2019 Phytec Messtechnik GmbH
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <dt-bindings/gpio/gpio.h>
+
+/ {
+	#address-cells = <1>;
+	#size-cells = <1>;
+
+	cpus {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		cpu@0 {
+			compatible = "vexriscv", "riscv";
+			reg = <0>;
+			device_type = "cpu";
+			riscv,isa = "rv32i";
+		};
+	};
+
+	soc {
+		#address-cells = <1>;
+		#size-cells = <1>;
+		compatible = "vexriscv,vexriscv-soc", "simple-bus";
+		ranges;
+	};
+};
