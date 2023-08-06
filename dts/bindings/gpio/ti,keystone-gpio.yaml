@@ -1,0 +1,23 @@
+# Copyright (c) 2018, SiFive Inc.
+# SPDX-License-Identifier: Apache-2.0
+
+description: TI Keystone GPIO node
+
+compatible: "ti,keystone-gpio"
+
+include: [gpio-controller.yaml, base.yaml]
+
+properties:
+  reg:
+    required: true
+
+  interrupts:
+    required: true
+
+gpio-cells:
+  - pin
+  - flags
+
+interrupt-cells:
+  - irq
+  - priority

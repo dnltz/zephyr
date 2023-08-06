@@ -1,0 +1,8 @@
+# TI Interrupt Router config
+
+# Copyright (c) 2023 Daniel Schultz <d.schultz@phytec.de
+# SPDX-License-Identifier: Apache-2.0
+
+config SCI_INTR
+	bool ""
+	default y

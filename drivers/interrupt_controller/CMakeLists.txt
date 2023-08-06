@@ -34,6 +34,7 @@ zephyr_library_sources_ifdef(CONFIG_NUCLEI_ECLIC            intc_nuclei_eclic.c)
 zephyr_library_sources_ifdef(CONFIG_NXP_S32_EIRQ            intc_eirq_nxp_s32.c)
 zephyr_library_sources_ifdef(CONFIG_XMC4XXX_INTC            intc_xmc4xxx.c)
 zephyr_library_sources_ifdef(CONFIG_NXP_PINT                intc_nxp_pint.c)
+zephyr_library_sources_ifdef(CONFIG_SCI_INTR                intc_sci_intr.c)
 
 if(CONFIG_INTEL_VTD_ICTL)
   zephyr_library_include_directories(${ZEPHYR_BASE}/arch/x86/include)
