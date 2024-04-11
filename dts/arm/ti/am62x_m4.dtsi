@@ -65,6 +65,15 @@
 		ngpios = <24>;
 		status = "disabled";
 	};
+
+
+	rti0: watchdog@4880000 {
+		compatible = "ti,davinci-watchdog";
+		reg = <0x4880000 0x400>;
+		interrupts = <19 4>;
+		interrupt-parent = <&nvic>;
+		status = "disabled";
+	};
 };
 
 &nvic {
