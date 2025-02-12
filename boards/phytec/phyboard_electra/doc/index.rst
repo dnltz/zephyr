@@ -52,9 +52,13 @@ The phyboard_electra/am6442/m4 configuration supports the following hardware fea
 +-----------+------------+-------------------------------------+
 | SYSTICK   | on-chip    | systick                             |
 +-----------+------------+-------------------------------------+
+| Mailbox   | on-chip    | IPC Mailbox                         |
++-----------+------------+-------------------------------------+
 | PINCTRL   | on-chip    | pinctrl                             |
 +-----------+------------+-------------------------------------+
 | UART      | on-chip    | serial                              |
++-----------+------------+-------------------------------------+
+| I2C       | on-chip    | i2c                                 |
 +-----------+------------+-------------------------------------+
 | GPIO      | on-chip    | gpio                                |
 +-----------+------------+-------------------------------------+
@@ -79,6 +83,20 @@ Serial Port
 
 This board configuration uses a single serial communication channel with the
 MCU domain UART (MCU_UART0).
+
+I2C
+---
+
+The phyBOARD-Electra carrier board has an I2C device on each bus to help
+verify its functionality.
+
++------+----------+---------+--------------------+
+| Bus  | Device   | Address | Function           |
++======+==========+=========+====================+
+| i2c0 | TMP102   | 0x48    | Temperature Sensor |
++------+----------+---------+--------------------+
+| i2c1 | VEML6030 | 0x10    | Light Sensor       |
++------+----------+---------+--------------------+
 
 GPIO
 ----
@@ -131,15 +149,55 @@ To allow the board to boot using the SD card, set the boot pins to the SD Card b
 The board should boot into Linux and the binary will run and print Hello world to the MCU_UART0
 port.
 
+U-Boot
+======
+
+Alternatively to Linux, U-Boot can also load and start the remoteproc firmware, offering the benefit of reduced boot time.
+
+Instead of booting into Linux, halt execution in U-Boot. Then, load the firmware from the root filesystem into RAM, transfer it to the remote processor core, and start the core.
+
+.. code-block:: console
+
+   load mmc 1:2 ${loadaddr} /lib/firmware/am64-mcu-m4f0_0-fw
+   rproc load 0 ${loadaddr} 0x${filesize}
+   rproc start 0
+
+This approach also allows fetching the :file:`zephyr.elf` directly from a TFTP server into RAM, eliminating the need to store the firmware on the SD card.
+
+.. code-block:: console
+
+   dhcp ${loadaddr} zephyr.elf
+   rproc load 0 ${loadaddr} 0x${filesize}
+   rproc start 0
+
+Debugging
+*********
+
+The board is equipped with an XDS110 JTAG debugger. To debug a binary, utilize the ``debug`` build
+target:
+
+.. zephyr-app-commands::
+   :app: <my_app>
+   :board: phyboard_lyra/am6442/m4
+   :maybe-skip-config:
+   :goals: debug
+
+.. hint::
+   To utilize this feature, you'll need OpenOCD version 0.12 or higher. Due to the possibility of
+   older versions being available in package feeds, it's advisable to `build OpenOCD from source`_.
+
 
 .. _PHYTEC AM64x Product Page:
    https://www.phytec.com/product/phycore-am64x/
 
 .. _WIC:
-   https://download.phytec.de/Software/Linux/BSP-Yocto-AM64x/BSP-Yocto-Ampliphy-AM64x-PD23.2.1/images/ampliphy/phyboard-electra-am64xx-2/phytec-headless-image-phyboard-electra-am64xx-2.wic.xz
+   https://download.phytec.de/Software/Linux/BSP-Yocto-AM64x/BSP-Yocto-Ampliphy-AM64x-PD24.1.1/images/ampliphy/phyboard-electra-am64xx-2/phytec-container-image-phyboard-electra-am64xx-2.rootfs.wic.xz
 
 .. _BMAP:
-   https://download.phytec.de/Software/Linux/BSP-Yocto-AM64x/BSP-Yocto-Ampliphy-AM64x-PD23.2.1/images/ampliphy/phyboard-electra-am64xx-2/phytec-headless-image-phyboard-electra-am64xx-2.wic.bmap
+   https://download.phytec.de/Software/Linux/BSP-Yocto-AM64x/BSP-Yocto-Ampliphy-AM64x-PD24.1.1/images/ampliphy/phyboard-electra-am64xx-2/phytec-container-image-phyboard-electra-am64xx-2.rootfs.wic.bmap
 
 .. _phyBOARD SD Card Booting Essentials:
-   https://docs.phytec.com/projects/yocto-phycore-am64x/en/bsp-yocto-ampliphy-am64x-pd23.2.1/bootingessentials/sdcard.html
+   https://docs.phytec.com/projects/yocto-phycore-am64x/en/bsp-yocto-ampliphy-am64x-pd24.1.1/bootingessentials/sdcard.html
+
+.. _build OpenOCD from source:
+   https://docs.u-boot.org/en/latest/board/ti/k3.html#building-openocd-from-source

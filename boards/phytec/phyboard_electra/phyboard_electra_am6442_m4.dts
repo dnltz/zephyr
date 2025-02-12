@@ -8,6 +8,7 @@
 /dts-v1/;
 
 #include <ti/am64x_m4.dtsi>
+#include "phyboard_electra_am6442_m4-pinctrl.dtsi"
 
 / {
 	model = "PHYTEC phyBOARD-Electra AM64x M4";
@@ -46,24 +47,37 @@
 	};
 };
 
-&pinctrl {
-	mcu_uart0_rx_default: mcu_uart0_rx_default {
-		pinmux = <K3_PINMUX(0x028, PIN_INPUT, MUX_MODE_0)>;
-	};
-	mcu_uart0_tx_default: mcu_uart0_tx_default {
-		pinmux = <K3_PINMUX(0x002C, PIN_OUTPUT, MUX_MODE_0)>;
-	};
-	mcu_gpio0_led_default: mcu_gpio0_led_default {
-		pinmux = <K3_PINMUX(0x0018, PIN_OUTPUT, MUX_MODE_7)>;
-	};
-};
-
 &uart0 {
 	current-speed = <115200>;
 	pinctrl-0 = <&mcu_uart0_rx_default &mcu_uart0_tx_default>;
 	pinctrl-names = "default";
 	status = "okay";
 };
+
+&i2c0 {
+	pinctrl-0 = <&mcu_i2c0_sda_default &mcu_i2c0_scl_default>;
+	pinctrl-names = "default";
+	clock-frequency = <I2C_BITRATE_STANDARD>;
+	status = "okay";
+
+	tmp102@48 {
+		compatible = "ti,tmp112";
+		reg = <0x48>;
+	};
+};
+
+&i2c1 {
+	pinctrl-0 = <&mcu_i2c1_sda_default &mcu_i2c1_scl_default>;
+	pinctrl-names = "default";
+	clock-frequency = <I2C_BITRATE_STANDARD>;
+	status = "okay";
+
+	veml6030@10 {
+		compatible = "vishay,veml7700";
+		reg = <0x10>;
+	};
+};
+
 
 &gpio0 {
 	pinctrl-0 = <&mcu_gpio0_led_default>;

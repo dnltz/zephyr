@@ -52,11 +52,15 @@ The phyboard_lyra/am6234/m4 configuration supports the following hardware featur
 +-----------+------------+-------------------------------------+
 | SYSTICK   | on-chip    | systick                             |
 +-----------+------------+-------------------------------------+
+| Mailbox   | on-chip    | IPC Mailbox                         |
++-----------+------------+-------------------------------------+
 | PINCTRL   | on-chip    | pinctrl                             |
 +-----------+------------+-------------------------------------+
 | UART      | on-chip    | serial                              |
 +-----------+------------+-------------------------------------+
-| Mailbox   | on-chip    | IPC Mailbox                         |
+| I2C       | on-chip    | i2c                                 |
++-----------+------------+-------------------------------------+
+| GPIO      | on-chip    | gpio                                |
 +-----------+------------+-------------------------------------+
 
 Other hardware features are not currently supported by the port.
@@ -79,6 +83,24 @@ Serial Port
 
 This board configuration uses a single serial communication channel with the
 MCU domain UART (MCU_UART0).
+
+I2C
+---
+
+The phyBOARD-Lyra carrier board has an I2C device on I2C0 bus to help
+verify its functionality.
+
++------+----------+---------+--------------------+
+| Bus  | Device   | Address | Function           |
++======+==========+=========+====================+
+| i2c0 | TMP102   | 0x48    | Temperature Sensor |
++------+----------+---------+--------------------+
+
+GPIO
+----
+
+The phyCORE-AM62x has a heartbeat LED connected to gpio0. It's configured
+to build and run the :zephyr:code-sample:`blinky` sample.
 
 SD Card
 *******
@@ -122,18 +144,29 @@ The SD card can now be used for booting. The binary will now be loaded onto the 
 
 To allow the board to boot using the SD card, set the boot pins to the SD Card boot mode. Refer to `phyBOARD SD Card Booting Essentials`_.
 
-After changing the boot mode, stop in U-Boot to enable the M4F co-processor.
-
-.. code-block:: console
-
-   setenv overlays k3-am62-phyboard-lyra-rpmsg.dtbo
-   # Save the overlays variable permanently
-   saveenv
-   boot
-
 The board should boot into Linux and the binary will run and print Hello world to the MCU_UART0
 port.
 
+U-Boot
+======
+
+Alternatively to Linux, U-Boot can also load and start the remoteproc firmware, offering the benefit of reduced boot time.
+
+Instead of booting into Linux, halt execution in U-Boot. Then, load the firmware from the root filesystem into RAM, transfer it to the remote processor core, and start the core.
+
+.. code-block:: console
+
+   load mmc 1:2 ${loadaddr} /lib/firmware/am62-mcu-m4f0_0-fw
+   rproc load 0 ${loadaddr} 0x${filesize}
+   rproc start 0
+
+This approach also allows fetching the :file:`zephyr.elf` directly from a TFTP server into RAM, eliminating the need to store the firmware on the SD card.
+
+.. code-block:: console
+
+   dhcp ${loadaddr} zephyr.elf
+   rproc load 0 ${loadaddr} 0x${filesize}
+   rproc start 0
 
 Debugging
 *********
@@ -156,13 +189,13 @@ target:
    https://www.phytec.com/product/phycore-am62x/
 
 .. _WIC:
-   https://download.phytec.de/Software/Linux/BSP-Yocto-AM62x/BSP-Yocto-Ampliphy-AM62x-PD23.2.1/images/ampliphy-xwayland/phyboard-lyra-am62xx-3/phytec-qt5demo-image-phyboard-lyra-am62xx-3.wic.xz
+   https://download.phytec.de/Software/Linux/BSP-Yocto-AM62x/BSP-Yocto-Ampliphy-AM62x-PD24.1.1/images/ampliphy/phyboard-lyra-am62xx-3/phytec-qt6demo-image-phyboard-lyra-am62xx-3.rootfs.wic.xz
 
 .. _BMAP:
-   https://download.phytec.de/Software/Linux/BSP-Yocto-AM62x/BSP-Yocto-Ampliphy-AM62x-PD23.2.1/images/ampliphy-xwayland/phyboard-lyra-am62xx-3/phytec-qt5demo-image-phyboard-lyra-am62xx-3.wic.bmap
+   https://download.phytec.de/Software/Linux/BSP-Yocto-AM62x/BSP-Yocto-Ampliphy-AM62x-PD24.1.1/images/ampliphy/phyboard-lyra-am62xx-3/phytec-qt6demo-image-phyboard-lyra-am62xx-3.rootfs.wic.bmap
 
 .. _phyBOARD SD Card Booting Essentials:
-   https://docs.phytec.com/projects/yocto-phycore-am62x/en/bsp-yocto-ampliphy-am62x-pd23.2.1/bootingessentials/sdcard.html
+   https://docs.phytec.com/projects/yocto-phycore-am62x/en/bsp-yocto-ampliphy-am62x-pd24.1.1/bootingessentials/sdcard.html
 
 .. _build OpenOCD from source:
    https://docs.u-boot.org/en/latest/board/ti/k3.html#building-openocd-from-source

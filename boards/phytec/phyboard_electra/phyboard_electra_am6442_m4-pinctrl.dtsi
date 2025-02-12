@@ -1,0 +1,32 @@
+/*
+ * Copyright (C) 2025 PHYTEC Messtechnik GmbH
+ * Author: Daniel Schultz <d.schultz@phytec.de>
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+#include <zephyr/dt-bindings/pinctrl/ti-k3-pinctrl.h>
+
+&pinctrl {
+	mcu_uart0_rx_default: mcu_uart0_rx_default {
+		pinmux = <K3_PINMUX(0x028, PIN_INPUT, MUX_MODE_0)>;
+	};
+	mcu_uart0_tx_default: mcu_uart0_tx_default {
+		pinmux = <K3_PINMUX(0x002C, PIN_OUTPUT, MUX_MODE_0)>;
+	};
+	mcu_gpio0_led_default: mcu_gpio0_led_default {
+		pinmux = <K3_PINMUX(0x0018, PIN_OUTPUT, MUX_MODE_7)>;
+	};
+	mcu_i2c0_scl_default: mcu_i2c0_scl_default {
+		pinmux = <K3_PINMUX(0x048, PIN_INPUT, MUX_MODE_0)>;
+	};
+	mcu_i2c0_sda_default: mcu_i2c0_sda_default {
+		pinmux = <K3_PINMUX(0x04C, PIN_INPUT, MUX_MODE_0)>;
+	};
+	mcu_i2c1_scl_default: mcu_i2c1_scl_default {
+		pinmux = <K3_PINMUX(0x050, PIN_INPUT, MUX_MODE_0)>;
+	};
+	mcu_i2c1_sda_default: mcu_i2c1_sda_default {
+		pinmux = <K3_PINMUX(0x054, PIN_INPUT, MUX_MODE_0)>;
+	};
+};

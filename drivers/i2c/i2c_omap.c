@@ -626,6 +626,7 @@ static int i2c_omap_transfer_main(const struct device *dev, struct i2c_msg msg[]
 
 	ret = i2c_omap_wait_for_bb(dev);
 	struct i2c_omap_data *data = DEV_DATA(dev);
+	i2c_omap_regs_t *i2c_base_addr = DEV_I2C_BASE(dev);
 
 	k_sem_take(&data->lock, K_FOREVER);
 	if (ret < 0) {
@@ -633,6 +634,20 @@ static int i2c_omap_transfer_main(const struct device *dev, struct i2c_msg msg[]
 	}
 	for (int msg_idx = 0; msg_idx < num; msg_idx++) {
 		ret = i2c_omap_transfer_message(dev, &msg[msg_idx], polling, addr);
+
+		printk("STAT: %x\n", i2c_base_addr->STAT);
+		printk("SYSS: %x\n", i2c_base_addr->SYSS);
+		printk("BUF: %x\n", i2c_base_addr->BUF);
+		printk("CNT: %x\n", i2c_base_addr->CNT);
+		printk("DATA: %x\n", i2c_base_addr->DATA);
+		printk("CON: %x\n", i2c_base_addr->CON);
+		printk("OA: %x\n", i2c_base_addr->OA);
+		printk("SA: %x\n", i2c_base_addr->SA);
+		printk("PSC: %x\n", i2c_base_addr->PSC);
+		printk("SCLL: %x\n", i2c_base_addr->SCLL);
+		printk("SCLH: %x\n", i2c_base_addr->SCLH);
+		printk("ret: %i\n", ret);
+
 		if (ret < 0) {
 			break;
 		}
